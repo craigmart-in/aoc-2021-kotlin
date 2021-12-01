@@ -1,4 +1,4 @@
-fun main() {
+fun main(args: Array<String>) {
     fun part1(input: List<String>): Int {
         return input.size
     }
