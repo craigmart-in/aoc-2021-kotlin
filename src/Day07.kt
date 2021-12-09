@@ -9,7 +9,6 @@ fun main() {
         var fuelUsedByPosition = mutableMapOf<Int, Int>()
 
         val crabsByPosition = input.groupBy { it }
-        println(crabsByPosition)
         crabsByPosition.forEach { horizontalPosition ->
             var fuelUsed = 0
             crabsByPosition.forEach {
@@ -18,24 +17,32 @@ fun main() {
             fuelUsedByPosition[horizontalPosition.key] = fuelUsed
         }
 
-        var leastUsedFuel = Int.MAX_VALUE
-
-        fuelUsedByPosition.forEach {
-            if (it.value < leastUsedFuel) {
-                leastUsedFuel = it.value
-            }
-        }
-
-        return leastUsedFuel
+        return fuelUsedByPosition.map { it.value }.minOf { it }
     }
 
     fun part2(input: List<Int>): Int {
-        return 1
+        var fuelUsedByPosition = mutableMapOf<Int, Int>()
+
+        val crabsByPosition = input.groupBy { it }
+        val minPosition = crabsByPosition.map { it.key }.minOf { it }
+        val maxPosition = crabsByPosition.map { it.key }.maxOf { it }
+        (minPosition..maxPosition).forEach { horizontalPosition ->
+            var fuelUsed = 0
+            crabsByPosition.forEach {
+                fuelUsed += (abs(horizontalPosition - it.key) downTo 1).sum() * it.value.size
+            }
+            fuelUsedByPosition[horizontalPosition] = fuelUsed
+        }
+
+        println(fuelUsedByPosition)
+
+        return fuelUsedByPosition.map { it.value }.minOf { it }
     }
 
     // test if implementation meets criteria from the description, like:
     val testInput = parseInput(readInput("Day07_test"))
     check(part1(testInput) == 37)
+    check(part2(testInput) == 168)
 
     val input = parseInput(readInput("Day07"))
     println(part1(input))
